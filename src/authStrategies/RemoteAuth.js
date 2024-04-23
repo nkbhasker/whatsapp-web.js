@@ -46,6 +46,7 @@ class RemoteAuth extends BaseAuthStrategy {
     }
 
     async beforeBrowserInitialized() {
+        console.log("ENTRANDO A BEFORE BROWSER INITIALIZED")
         const puppeteerOpts = this.client.options.puppeteer;
         const sessionDirName = this.clientId ? `RemoteAuth-${this.clientId}` : 'RemoteAuth';
         const dirPath = path.join(this.dataPath, sessionDirName);
@@ -63,6 +64,7 @@ class RemoteAuth extends BaseAuthStrategy {
             ...puppeteerOpts,
             userDataDir: dirPath
         };
+        console.log("SALIENDO DE BEFORE BROWSER INITIALIZED")
     }
 
     async logout() {
@@ -114,6 +116,7 @@ class RemoteAuth extends BaseAuthStrategy {
     }
 
     async extractRemoteSession() {
+        console.log("ENTRANDO A EXTRACT REMOTE SESSION")
         const pathExists = await this.isValidPath(this.userDataDir);
         const compressedSessionPath = `${this.dataPath}/${this.sessionName}.zip`;
         const sessionExists = await this.store.sessionExists({session: this.sessionName});
@@ -124,11 +127,15 @@ class RemoteAuth extends BaseAuthStrategy {
             }).catch(() => {});
         }
         if (sessionExists) {
+            console.log('REMOTE AUTH: SESIÓN EXISTE')
             await this.store.extract({session: this.sessionName, path: compressedSessionPath});
+            console.log('REMOTE AUTH: EXTRACT LISTO')
             await this.unCompressSession(compressedSessionPath);
+            console.log('REMOTE AUTH: UNCOMPRESS LISTO')
         } else {
             fs.mkdirSync(this.userDataDir, { recursive: true });
         }
+    console.log("SALIENDO DE EXTRACT REMOTE SESSION")
     }
 
     async deleteRemoteSession() {

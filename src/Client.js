@@ -93,16 +93,21 @@ class Client extends EventEmitter {
      */
     async initialize() {
         let [browser, page] = [null, null];
+        console.log("ENTRANDO A INITIALIZE")
 
         await this.authStrategy.beforeBrowserInitialized();
+        console.log("--> CONFIGURANDO PUPPETEER")
 
         const puppeteerOpts = this.options.puppeteer;
         if (puppeteerOpts && puppeteerOpts.browserWSEndpoint) {
+            console.log("--> ENTRO AL IF")
             browser = await puppeteer.connect(puppeteerOpts);
             page = await browser.newPage();
         } else {
+            console.log("--> ENTRO AL ELSE")
             const browserArgs = [...(puppeteerOpts.args || [])];
             if(!browserArgs.find(arg => arg.includes('--user-agent'))) {
+                console.log("ENTRO AL IF DENTRO DEL ELSE")
                 browserArgs.push(`--user-agent=${this.options.userAgent}`);
             }
             // navigator.webdriver fix
@@ -111,20 +116,25 @@ class Client extends EventEmitter {
             browser = await puppeteer.launch({...puppeteerOpts, args: browserArgs});
             page = (await browser.pages())[0];
         }
+        console.log("AUTENTICANDO CON EL PROXY")
 
         if (this.options.proxyAuthentication !== undefined) {
             await page.authenticate(this.options.proxyAuthentication);
         }
+        console.log("PONIENDO SET USER AGENT")
       
         await page.setUserAgent(this.options.userAgent);
         if (this.options.bypassCSP) await page.setBypassCSP(true);
 
         this.pupBrowser = browser;
         this.pupPage = page;
+        console.log("ENTRANDO A AFTER BROWSER INITIALIZED")
 
         await this.authStrategy.afterBrowserInitialized();
+        console.log("SALIENDO DE AFTER BROWSER INITIALIZED")
         await this.initWebVersionCache();
 
+        console.log("EVALUANDO NUEVO DOCUMENTO")
         // ocVesion (isOfficialClient patch)
         await page.evaluateOnNewDocument(() => {
             const originalError = Error;
@@ -136,12 +146,16 @@ class Client extends EventEmitter {
                 return error;
             };
         });
+
+        console.log("ABRIENDO WHATSAPP")
         
         await page.goto(WhatsWebURL, {
             waitUntil: 'load',
             timeout: 0,
             referer: 'https://whatsapp.com/'
         });
+
+        console.log("EVALUANDO PÁGINA")
 
         await page.evaluate(`function getElementByXpath(path) {
             return document.evaluate(path, document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue;
@@ -150,6 +164,8 @@ class Client extends EventEmitter {
         let lastPercent = null,
             lastPercentMessage = null;
 
+        console.log("EXPONIENDO FUNCION LOADING SCREEN")
+
         await page.exposeFunction('loadingScreen', async (percent, message) => {
             if (lastPercent !== percent || lastPercentMessage !== message) {
                 this.emit(Events.LOADING_SCREEN, percent, message);
@@ -157,6 +173,8 @@ class Client extends EventEmitter {
                 lastPercentMessage = message;
             }
         });
+
+        console.log("EVALUANDO PÁGINA ")
 
         await page.evaluate(
             async function (selectors) {
@@ -211,6 +229,7 @@ class Client extends EventEmitter {
 
         // Scan-qrcode selector was found. Needs authentication
         if (needAuthentication) {
+            console.log("NECESITA AUTH")
             const { failed, failureEventPayload, restart } = await this.authStrategy.onAuthenticationNeeded();
             if(failed) {
                 /**
@@ -292,6 +311,8 @@ class Client extends EventEmitter {
 
         }
 
+        console.log("EVALUANDO DIFERENTES VERSIONES DE WHATSAPP")
+
         await page.evaluate(() => {
             /**
              * Helper function that compares between two WWeb versions. Its purpose is to help the developer to choose the correct code implementation depending on the comparison value and the WWeb version.
@@ -335,8 +356,10 @@ class Client extends EventEmitter {
                 );
             };
         });
+        console.log("EXPOSE STORE")
 
         await page.evaluate(ExposeStore, moduleRaid.toString());
+        console.log("GET AUTH EVENT PAYLOAD")
         const authEventPayload = await this.authStrategy.getAuthEventPayload();
 
         /**
@@ -346,8 +369,10 @@ class Client extends EventEmitter {
         this.emit(Events.AUTHENTICATED, authEventPayload);
 
         // Check window.Store Injection
+        console.log("ESPERANDO WINDOW STORE UNDEFINED")
         await page.waitForFunction('window.Store != undefined');
 
+        console.log("UNREGISTER SERVICE WORKERS")
         await page.evaluate(async () => {
             // safely unregister service workers
             const registrations = await navigator.serviceWorker.getRegistrations();
@@ -357,6 +382,7 @@ class Client extends EventEmitter {
         });
 
         //Load util functions (serializers, helper functions)
+        console.log("LOAD UTILS")
         await page.evaluate(LoadUtils);
 
         // Expose client info
