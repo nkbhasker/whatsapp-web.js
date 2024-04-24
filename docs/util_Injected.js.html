@@ -4,7 +4,7 @@
 <head>
   <meta name="generator" content="JSDoc 3.6.11">
   <meta charset="utf-8">
-  <title>whatsapp-web.js 1.23.0 &raquo; Source: util/Injected.js</title>
+  <title>whatsapp-web.js 1.23.1-alpha.5 &raquo; Source: util/Injected.js</title>
   <link rel="stylesheet" href="https://brick.a.ssl.fastly.net/Karla:400,400i,700,700i" type="text/css">
   <link rel="stylesheet" href="https://brick.a.ssl.fastly.net/Noto+Serif:400,400i,700,700i" type="text/css">
   <link rel="stylesheet" href="https://brick.a.ssl.fastly.net/Inconsolata:500" type="text/css">
@@ -15,7 +15,7 @@
   <nav id="jsdoc-navbar" role="navigation" class="jsdoc-navbar">
     <div id="jsdoc-navbar-container">
       <div id="jsdoc-navbar-content">
-        <a href="index.html" class="jsdoc-navbar-package-name">whatsapp-web.<wbr>js 1.<wbr>23.<wbr>0</a>
+        <a href="index.html" class="jsdoc-navbar-package-name">whatsapp-web.<wbr>js 1.<wbr>23.<wbr>1-alpha.<wbr>5</a>
       </div>
     </div>
   </nav>
@@ -54,7 +54,6 @@ exports.ExposeStore &#x3D; (moduleRaidStr) &#x3D;&gt; {
     window.Store.MediaTypes &#x3D; window.mR.findModule(&#x27;msgToMediaType&#x27;)[0];
     window.Store.MediaUpload &#x3D; window.mR.findModule(&#x27;uploadMedia&#x27;)[0];
     window.Store.MsgKey &#x3D; window.mR.findModule((module) &#x3D;&gt; module.default &amp;amp;&amp;amp; module.default.fromString)[0].default;
-    window.Store.MessageInfo &#x3D; window.mR.findModule(&#x27;sendQueryMsgInfo&#x27;)[0];
     window.Store.OpaqueData &#x3D; window.mR.findModule(module &#x3D;&gt; module.default &amp;amp;&amp;amp; module.default.createFromData)[0].default;
     window.Store.QueryProduct &#x3D; window.mR.findModule(&#x27;queryProduct&#x27;)[0];
     window.Store.QueryOrder &#x3D; window.mR.findModule(&#x27;queryOrder&#x27;)[0];
@@ -82,6 +81,7 @@ exports.ExposeStore &#x3D; (moduleRaidStr) &#x3D;&gt; {
     window.Store.EphemeralFields &#x3D; window.mR.findModule(&#x27;getEphemeralFields&#x27;)[0];
     window.Store.MsgActionChecks &#x3D; window.mR.findModule(&#x27;canSenderRevokeMsg&#x27;)[0];
     window.Store.QuotedMsg &#x3D; window.mR.findModule(&#x27;getQuotedMsgObj&#x27;)[0];
+    window.Store.LinkPreview &#x3D; window.mR.findModule(&#x27;getLinkPreview&#x27;)[0];
     window.Store.Socket &#x3D; window.mR.findModule(&#x27;deprecatedSendIq&#x27;)[0];
     window.Store.SocketWap &#x3D; window.mR.findModule(&#x27;wap&#x27;)[0];
     window.Store.SearchContext &#x3D; window.mR.findModule(&#x27;getSearchContext&#x27;)[0].getSearchContext;
@@ -89,12 +89,18 @@ exports.ExposeStore &#x3D; (moduleRaidStr) &#x3D;&gt; {
     window.Store.LidUtils &#x3D; window.mR.findModule(&#x27;getCurrentLid&#x27;)[0];
     window.Store.WidToJid &#x3D; window.mR.findModule(&#x27;widToUserJid&#x27;)[0];
     window.Store.JidToWid &#x3D; window.mR.findModule(&#x27;userJidToUserWid&#x27;)[0];
+    window.Store.getMsgInfo &#x3D; (window.mR.findModule(&#x27;sendQueryMsgInfo&#x27;)[0] || {}).sendQueryMsgInfo || window.mR.findModule(&#x27;queryMsgInfo&#x27;)[0].queryMsgInfo;
+    window.Store.pinUnpinMsg &#x3D; window.mR.findModule(&#x27;sendPinInChatMsg&#x27;)[0].sendPinInChatMsg;
     
     /* eslint-disable no-undef, no-cond-assign */
     window.Store.QueryExist &#x3D; ((m &#x3D; window.mR.findModule(&#x27;queryExists&#x27;)[0]) ? m.queryExists : window.mR.findModule(&#x27;queryExist&#x27;)[0].queryWidExists);
     window.Store.ReplyUtils &#x3D; (m &#x3D; window.mR.findModule(&#x27;canReplyMsg&#x27;)).length &gt; 0 &amp;amp;&amp;amp; m[0];
     /* eslint-enable no-undef, no-cond-assign */
 
+    window.Store.Settings &#x3D; {
+        ...window.mR.findModule(&#x27;ChatlistPanelState&#x27;)[0],
+        setPushname: window.mR.findModule((m) &#x3D;&gt; m.setPushname &amp;amp;&amp;amp; !m.ChatlistPanelState)[0].setPushname
+    };
     window.Store.StickerTools &#x3D; {
         ...window.mR.findModule(&#x27;toWebpSticker&#x27;)[0],
         ...window.mR.findModule(&#x27;addWebpMetadata&#x27;)[0]
@@ -134,12 +140,6 @@ exports.ExposeStore &#x3D; (moduleRaidStr) &#x3D;&gt; {
     // eslint-disable-next-line no-undef
     if ((m &#x3D; window.mR.findModule(&#x27;ChatCollection&#x27;)[0]) &amp;amp;&amp;amp; m.ChatCollection &amp;amp;&amp;amp; typeof m.ChatCollection.findImpl &#x3D;&#x3D;&#x3D; &#x27;undefined&#x27; &amp;amp;&amp;amp; typeof m.ChatCollection._find !&#x3D;&#x3D; &#x27;undefined&#x27;) m.ChatCollection.findImpl &#x3D; m.ChatCollection._find;
 
-    // TODO remove these once everybody has been updated to WWebJS with legacy sessions removed
-    const _linkPreview &#x3D; window.mR.findModule(&#x27;queryLinkPreview&#x27;);
-    if (_linkPreview &amp;amp;&amp;amp; _linkPreview[0] &amp;amp;&amp;amp; _linkPreview[0].default) {
-        window.Store.Wap &#x3D; _linkPreview[0].default;
-    }
-
     const _isMDBackend &#x3D; window.mR.findModule(&#x27;isMDBackend&#x27;);
     if(_isMDBackend &amp;amp;&amp;amp; _isMDBackend[0] &amp;amp;&amp;amp; _isMDBackend[0].isMDBackend) {
         window.Store.MDBackend &#x3D; _isMDBackend[0].isMDBackend();
@@ -155,9 +155,9 @@ exports.ExposeStore &#x3D; (moduleRaidStr) &#x3D;&gt; {
     /**
      * Target options object description
      * @typedef {Object} TargetOptions
-     * @property {string|number} moduleId The name or a key of the target module to search
+     * @property {string|number} module The name or a key of the target module to search
      * @property {number} index The index value of the target module
-     * @property {string} property The function name to get from a module
+     * @property {string} function The function name to get from a module
      */
 
     /**
@@ -166,17 +166,17 @@ exports.ExposeStore &#x3D; (moduleRaidStr) &#x3D;&gt; {
      * @param {Function} callback Modified function
      */
     window.injectToFunction &#x3D; (target, callback) &#x3D;&gt; {
-        const module &#x3D; typeof target.moduleId &#x3D;&#x3D;&#x3D; &#x27;string&#x27;
-            ? window.mR.findModule(target.moduleId)
-            : window.mR.modules[target.moduleId];
-        const originalFunction &#x3D; module[target.index][target.property];
+        const module &#x3D; typeof target.module &#x3D;&#x3D;&#x3D; &#x27;string&#x27;
+            ? window.mR.findModule(target.module)
+            : window.mR.modules[target.module];
+        const originalFunction &#x3D; module[target.index][target.function];
         const modifiedFunction &#x3D; (...args) &#x3D;&gt; callback(originalFunction, ...args);
-        module[target.index][target.property] &#x3D; modifiedFunction;
+        module[target.index][target.function] &#x3D; modifiedFunction;
     };
 
-    window.injectToFunction({ moduleId: &#x27;mediaTypeFromProtobuf&#x27;, index: 0, property: &#x27;mediaTypeFromProtobuf&#x27; }, (func, ...args) &#x3D;&gt; { const [proto] &#x3D; args; return proto.locationMessage ? null : func(...args); });
+    window.injectToFunction({ module: &#x27;mediaTypeFromProtobuf&#x27;, index: 0, function: &#x27;mediaTypeFromProtobuf&#x27; }, (func, ...args) &#x3D;&gt; { const [proto] &#x3D; args; return proto.locationMessage ? null : func(...args); });
 
-    window.injectToFunction({ moduleId: &#x27;typeAttributeFromProtobuf&#x27;, index: 0, property: &#x27;typeAttributeFromProtobuf&#x27; }, (func, ...args) &#x3D;&gt; { const [proto] &#x3D; args; return proto.locationMessage || proto.groupInviteMessage ? &#x27;text&#x27; : func(...args); });
+    window.injectToFunction({ module: &#x27;typeAttributeFromProtobuf&#x27;, index: 0, function: &#x27;typeAttributeFromProtobuf&#x27; }, (func, ...args) &#x3D;&gt; { const [proto] &#x3D; args; return proto.locationMessage || proto.groupInviteMessage ? &#x27;text&#x27; : func(...args); });
 };
 
 exports.LoadUtils &#x3D; () &#x3D;&gt; {
@@ -203,9 +203,7 @@ exports.LoadUtils &#x3D; () &#x3D;&gt; {
                     forceGif: options.sendVideoAsGif
                 });
             
-            if (options.caption){
-                attOptions.caption &#x3D; options.caption; 
-            }
+            attOptions.caption &#x3D; options.caption;
             content &#x3D; options.sendMediaAsSticker ? undefined : attOptions.preview;
             attOptions.isViewOnce &#x3D; options.isViewOnce;
 
@@ -228,7 +226,22 @@ exports.LoadUtils &#x3D; () &#x3D;&gt; {
         }
 
         if (options.mentionedJidList) {
-            options.mentionedJidList &#x3D; options.mentionedJidList.map(cId &#x3D;&gt; window.Store.Contact.get(cId).id);
+            options.mentionedJidList &#x3D; await Promise.all(
+                options.mentionedJidList.map(async (id) &#x3D;&gt; {
+                    const wid &#x3D; window.Store.WidFactory.createWid(id);
+                    if (await window.Store.QueryExist(wid)) {
+                        return wid;
+                    }
+                })
+            );
+            options.mentionedJidList &#x3D; options.mentionedJidList.filter(Boolean);
+        }
+
+        if (options.groupMentions) {
+            options.groupMentions &#x3D; options.groupMentions.map((e) &#x3D;&gt; ({
+                groupSubject: e.subject,
+                groupJid: window.Store.WidFactory.createWid(e.id)
+            }));
         }
 
         let locationOptions &#x3D; {};
@@ -298,15 +311,14 @@ exports.LoadUtils &#x3D; () &#x3D;&gt; {
 
         if (options.linkPreview) {
             delete options.linkPreview;
-
-            // Not supported yet by WhatsApp Web on MD
-            if(!window.Store.MDBackend) {
-                const link &#x3D; window.Store.Validators.findLink(content);
-                if (link) {
-                    const preview &#x3D; await window.Store.Wap.queryLinkPreview(link.url);
+            const link &#x3D; window.Store.Validators.findLink(content);
+            if (link) {
+                let preview &#x3D; await window.Store.LinkPreview.getLinkPreview(link);
+                if (preview &amp;amp;&amp;amp; preview.data) {
+                    preview &#x3D; preview.data;
                     preview.preview &#x3D; true;
                     preview.subtype &#x3D; &#x27;url&#x27;;
-                    options &#x3D; { ...options, ...preview };
+                    options &#x3D; {...options, ...preview};
                 }
             }
         }
@@ -402,21 +414,32 @@ exports.LoadUtils &#x3D; () &#x3D;&gt; {
         delete options.extraOptions;
         
         if (options.mentionedJidList) {
-            options.mentionedJidList &#x3D; options.mentionedJidList.map(cId &#x3D;&gt; window.Store.Contact.get(cId).id);
+            options.mentionedJidList &#x3D; await Promise.all(
+                options.mentionedJidList.map(async (id) &#x3D;&gt; {
+                    const wid &#x3D; window.Store.WidFactory.createWid(id);
+                    if (await window.Store.QueryExist(wid)) {
+                        return wid;
+                    }
+                })
+            );
+            options.mentionedJidList &#x3D; options.mentionedJidList.filter(Boolean);
+        }
+
+        if (options.groupMentions) {
+            options.groupMentions &#x3D; options.groupMentions.map((e) &#x3D;&gt; ({
+                groupSubject: e.subject,
+                groupJid: window.Store.WidFactory.createWid(e.id)
+            }));
         }
 
         if (options.linkPreview) {
-            options.linkPreview &#x3D; null;
-
-            // Not supported yet by WhatsApp Web on MD
-            if(!window.Store.MDBackend) {
-                const link &#x3D; window.Store.Validators.findLink(content);
-                if (link) {
-                    const preview &#x3D; await window.Store.Wap.queryLinkPreview(link.url);
-                    preview.preview &#x3D; true;
-                    preview.subtype &#x3D; &#x27;url&#x27;;
-                    options &#x3D; { ...options, ...preview };
-                }
+            delete options.linkPreview;
+            const link &#x3D; window.Store.Validators.findLink(content);
+            if (link) {
+                const preview &#x3D; await window.Store.LinkPreview.getLinkPreview(link);
+                preview.preview &#x3D; true;
+                preview.subtype &#x3D; &#x27;url&#x27;;
+                options &#x3D; { ...options, ...preview };
             }
         }
 
@@ -540,7 +563,7 @@ exports.LoadUtils &#x3D; () &#x3D;&gt; {
 
         msg.isEphemeral &#x3D; message.isEphemeral;
         msg.isStatusV3 &#x3D; message.isStatusV3;
-        msg.links &#x3D; (message.getRawLinks()).map(link &#x3D;&gt; ({
+        msg.links &#x3D; (window.Store.Validators.findLinks(message.mediaObject ? message.caption : message.body)).map((link) &#x3D;&gt; ({
             link: link.href,
             isSuspicious: Boolean(link.suspiciousCharacters &amp;amp;&amp;amp; link.suspiciousCharacters.size)
         }));
@@ -1122,6 +1145,14 @@ exports.LoadUtils &#x3D; () &#x3D;&gt; {
             return [];
         }
     };
+
+    window.WWebJS.pinUnpinMsgAction &#x3D; async (msgId, action, duration) &#x3D;&gt; {
+        const message &#x3D; window.Store.Msg.get(msgId);
+        if (!message) return false;
+        const response &#x3D; await window.Store.pinUnpinMsg(message, action, duration);
+        if (response.messageSendResult &#x3D;&#x3D;&#x3D; &#x27;OK&#x27;) return true;
+        return false;
+    };
 };
 </code></pre>
           </article>
@@ -1133,7 +1164,7 @@ exports.LoadUtils &#x3D; () &#x3D;&gt; {
   <footer id="jsdoc-footer" class="jsdoc-footer">
     <div id="jsdoc-footer-container">
       <p>
-        Generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc</a> 3.6.11 on October 21, 2023.
+        Generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc</a> 3.6.11 on April 24, 2024.
       </p>
     </div>
   </footer>

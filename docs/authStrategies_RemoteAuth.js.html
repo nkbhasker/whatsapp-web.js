@@ -4,7 +4,7 @@
 <head>
   <meta name="generator" content="JSDoc 3.6.11">
   <meta charset="utf-8">
-  <title>whatsapp-web.js 1.23.0 &raquo; Source: authStrategies/RemoteAuth.js</title>
+  <title>whatsapp-web.js 1.23.1-alpha.5 &raquo; Source: authStrategies/RemoteAuth.js</title>
   <link rel="stylesheet" href="https://brick.a.ssl.fastly.net/Karla:400,400i,700,700i" type="text/css">
   <link rel="stylesheet" href="https://brick.a.ssl.fastly.net/Noto+Serif:400,400i,700,700i" type="text/css">
   <link rel="stylesheet" href="https://brick.a.ssl.fastly.net/Inconsolata:500" type="text/css">
@@ -15,7 +15,7 @@
   <nav id="jsdoc-navbar" role="navigation" class="jsdoc-navbar">
     <div id="jsdoc-navbar-container">
       <div id="jsdoc-navbar-content">
-        <a href="index.html" class="jsdoc-navbar-package-name">whatsapp-web.<wbr>js 1.<wbr>23.<wbr>0</a>
+        <a href="index.html" class="jsdoc-navbar-package-name">whatsapp-web.<wbr>js 1.<wbr>23.<wbr>1-alpha.<wbr>5</a>
       </div>
     </div>
   </nav>
@@ -34,11 +34,11 @@
 /* Require Optional Dependencies */
 try {
     var fs &#x3D; require(&#x27;fs-extra&#x27;);
-    var unzipper &#x3D; require(&#x27;unzipper&#x27;);
+    var AdmZip &#x3D; require(&#x27;adm-zip&#x27;);
     var archiver &#x3D; require(&#x27;archiver&#x27;);
 } catch {
     fs &#x3D; undefined;
-    unzipper &#x3D; undefined;
+    AdmZip &#x3D; undefined;
     archiver &#x3D; undefined;
 }
 
@@ -56,7 +56,7 @@ const BaseAuthStrategy &#x3D; require(&#x27;./BaseAuthStrategy&#x27;);
  */
 class RemoteAuth extends BaseAuthStrategy {
     constructor({ clientId, dataPath, store, backupSyncIntervalMs } &#x3D; {}) {
-        if (!fs &amp;amp;&amp;amp; !unzipper &amp;amp;&amp;amp; !archiver) throw new Error(&#x27;Optional Dependencies [fs-extra, unzipper, archiver] are required to use RemoteAuth. Make sure to run npm install correctly and remove the --no-optional flag&#x27;);
+        if (!fs &amp;amp;&amp;amp; !AdmZip &amp;amp;&amp;amp; !archiver) throw new Error(&#x27;Optional Dependencies [fs-extra, adm-zip, archiver] are required to use RemoteAuth. Make sure to run npm install correctly and remove the --no-optional flag&#x27;);
         super();
 
         const idRegex &#x3D; /^[-_\w]+$/i;
@@ -77,6 +77,7 @@ class RemoteAuth extends BaseAuthStrategy {
     }
 
     async beforeBrowserInitialized() {
+        console.log(&quot;ENTRANDO A BEFORE BROWSER INITIALIZED&quot;)
         const puppeteerOpts &#x3D; this.client.options.puppeteer;
         const sessionDirName &#x3D; this.clientId ? &#x60;RemoteAuth-${this.clientId}&#x60; : &#x27;RemoteAuth&#x27;;
         const dirPath &#x3D; path.join(this.dataPath, sessionDirName);
@@ -94,6 +95,7 @@ class RemoteAuth extends BaseAuthStrategy {
             ...puppeteerOpts,
             userDataDir: dirPath
         };
+        console.log(&quot;SALIENDO DE BEFORE BROWSER INITIALIZED&quot;)
     }
 
     async logout() {
@@ -135,7 +137,7 @@ class RemoteAuth extends BaseAuthStrategy {
         if (pathExists) {
             await this.compressSession();
             await this.store.save({session: this.sessionName});
-            await fs.promises.unlink(&#x60;${this.sessionName}.zip&#x60;);
+            await fs.promises.unlink(&#x60;${this.dataPath}/${this.sessionName}.zip&#x60;);
             await fs.promises.rm(&#x60;${this.tempDir}&#x60;, {
                 recursive: true,
                 force: true
@@ -145,8 +147,9 @@ class RemoteAuth extends BaseAuthStrategy {
     }
 
     async extractRemoteSession() {
+        console.log(&quot;ENTRANDO A EXTRACT REMOTE SESSION&quot;)
         const pathExists &#x3D; await this.isValidPath(this.userDataDir);
-        const compressedSessionPath &#x3D; &#x60;${this.sessionName}.zip&#x60;;
+        const compressedSessionPath &#x3D; &#x60;${this.dataPath}/${this.sessionName}.zip&#x60;;
         const sessionExists &#x3D; await this.store.sessionExists({session: this.sessionName});
         if (pathExists) {
             await fs.promises.rm(this.userDataDir, {
@@ -155,11 +158,15 @@ class RemoteAuth extends BaseAuthStrategy {
             }).catch(() &#x3D;&gt; {});
         }
         if (sessionExists) {
+            console.log(&#x27;REMOTE AUTH: SESIÓN EXISTE&#x27;)
             await this.store.extract({session: this.sessionName, path: compressedSessionPath});
+            console.log(&#x27;REMOTE AUTH: EXTRACT LISTO&#x27;)
             await this.unCompressSession(compressedSessionPath);
+            console.log(&#x27;REMOTE AUTH: UNCOMPRESS LISTO&#x27;)
         } else {
             fs.mkdirSync(this.userDataDir, { recursive: true });
         }
+    console.log(&quot;SALIENDO DE EXTRACT REMOTE SESSION&quot;)
     }
 
     async deleteRemoteSession() {
@@ -169,7 +176,7 @@ class RemoteAuth extends BaseAuthStrategy {
 
     async compressSession() {
         const archive &#x3D; archiver(&#x27;zip&#x27;);
-        const stream &#x3D; fs.createWriteStream(&#x60;${this.sessionName}.zip&#x60;);
+        const stream &#x3D; fs.createWriteStream(&#x60;${this.dataPath}/${this.sessionName}.zip&#x60;);
 
         await fs.copy(this.userDataDir, this.tempDir).catch(() &#x3D;&gt; {});
         await this.deleteMetadata();
@@ -185,14 +192,8 @@ class RemoteAuth extends BaseAuthStrategy {
     }
 
     async unCompressSession(compressedSessionPath) {
-        var stream &#x3D; fs.createReadStream(compressedSessionPath);
-        await new Promise((resolve, reject) &#x3D;&gt; {
-            stream.pipe(unzipper.Extract({
-                path: this.userDataDir
-            }))
-                .on(&#x27;error&#x27;, err &#x3D;&gt; reject(err))
-                .on(&#x27;finish&#x27;, () &#x3D;&gt; resolve());
-        });
+        var zip &#x3D; new AdmZip(compressedSessionPath);
+        zip.extractAllTo(this.userDataDir, false, false)
         await fs.promises.unlink(compressedSessionPath);
     }
 
@@ -243,7 +244,7 @@ module.exports &#x3D; RemoteAuth;
   <footer id="jsdoc-footer" class="jsdoc-footer">
     <div id="jsdoc-footer-container">
       <p>
-        Generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc</a> 3.6.11 on October 21, 2023.
+        Generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc</a> 3.6.11 on April 24, 2024.
       </p>
     </div>
   </footer>

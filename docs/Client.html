@@ -4,7 +4,7 @@
 <head>
   <meta name="generator" content="JSDoc 3.6.11">
   <meta charset="utf-8">
-  <title>whatsapp-web.js 1.23.0 &raquo; Class: Client</title>
+  <title>whatsapp-web.js 1.23.1-alpha.5 &raquo; Class: Client</title>
   <link rel="stylesheet" href="https://brick.a.ssl.fastly.net/Karla:400,400i,700,700i" type="text/css">
   <link rel="stylesheet" href="https://brick.a.ssl.fastly.net/Noto+Serif:400,400i,700,700i" type="text/css">
   <link rel="stylesheet" href="https://brick.a.ssl.fastly.net/Inconsolata:500" type="text/css">
@@ -15,7 +15,7 @@
   <nav id="jsdoc-navbar" role="navigation" class="jsdoc-navbar">
     <div id="jsdoc-navbar-container">
       <div id="jsdoc-navbar-content">
-        <a href="index.html" class="jsdoc-navbar-package-name">whatsapp-web.<wbr>js 1.<wbr>23.<wbr>0</a>
+        <a href="index.html" class="jsdoc-navbar-package-name">whatsapp-web.<wbr>js 1.<wbr>23.<wbr>1-alpha.<wbr>5</a>
       </div>
     </div>
   </nav>
@@ -26,7 +26,7 @@
           <header class="page-header">
             <div class="symbol-detail-labels"><span class="label label-kind">class</span></div>
             <h1><small></small><span class="symbol-name">Client</span></h1>
-            <p class="source-link">Source: <a href="Client.js.html#source-line-56">Client.<wbr>js:56</a></p>
+            <p class="source-link">Source: <a href="Client.js.html#source-line-58">Client.<wbr>js:58</a></p>
             <div class="symbol-classdesc">
               <p>Starting point for interacting with the WhatsApp Web API</p>
             </div>
@@ -100,16 +100,16 @@
                     <dt><a href="Client.html#getContactById">getContactById(contactId)</a></dt>
                     <dd>
                     </dd>
-                  </dl>
-                </div>
-                <div class="summary-column">
-                  <dl class="dl-summary-callout">
                     <dt><a href="Client.html#getContacts">getContacts()</a></dt>
                     <dd>
                     </dd>
                     <dt><a href="Client.html#getCountryCode">getCountryCode(number)</a></dt>
                     <dd>
                     </dd>
+                  </dl>
+                </div>
+                <div class="summary-column">
+                  <dl class="dl-summary-callout">
                     <dt><a href="Client.html#getFormattedNumber">getFormattedNumber(number)</a></dt>
                     <dd>
                     </dd>
@@ -149,10 +149,6 @@
                     <dt><a href="Client.html#markChatUnread">markChatUnread(chatId)</a></dt>
                     <dd>
                     </dd>
-                  </dl>
-                </div>
-                <div class="summary-column">
-                  <dl class="dl-summary-callout">
                     <dt><a href="Client.html#muteChat">muteChat(chatId, unmuteDate)</a></dt>
                     <dd>
                     </dd>
@@ -165,6 +161,10 @@
                     <dt><a href="Client.html#resetState">resetState()</a></dt>
                     <dd>
                     </dd>
+                  </dl>
+                </div>
+                <div class="summary-column">
+                  <dl class="dl-summary-callout">
                     <dt><a href="Client.html#searchMessages">searchMessages(query[, options])</a></dt>
                     <dd>
                     </dd>
@@ -178,6 +178,18 @@
                     <dd>
                     </dd>
                     <dt><a href="Client.html#sendSeen">sendSeen(chatId)</a></dt>
+                    <dd>
+                    </dd>
+                    <dt><a href="Client.html#setAutoDownloadAudio">setAutoDownloadAudio(flag)</a></dt>
+                    <dd>
+                    </dd>
+                    <dt><a href="Client.html#setAutoDownloadDocuments">setAutoDownloadDocuments(flag)</a></dt>
+                    <dd>
+                    </dd>
+                    <dt><a href="Client.html#setAutoDownloadPhotos">setAutoDownloadPhotos(flag)</a></dt>
+                    <dd>
+                    </dd>
+                    <dt><a href="Client.html#setAutoDownloadVideos">setAutoDownloadVideos(flag)</a></dt>
                     <dd>
                     </dd>
                     <dt><a href="Client.html#setDisplayName">setDisplayName(displayName)</a></dt>
@@ -231,13 +243,13 @@
                     <dt><a href="Client.html#event:disconnected">disconnected</a></dt>
                     <dd>
                     </dd>
+                    <dt><a href="Client.html#event:group_admin_changed">group_admin_changed</a></dt>
+                    <dd>
+                    </dd>
                   </dl>
                 </div>
                 <div class="summary-column">
                   <dl class="dl-summary-callout">
-                    <dt><a href="Client.html#event:group_admin_changed">group_admin_changed</a></dt>
-                    <dd>
-                    </dd>
                     <dt><a href="Client.html#event:group_join">group_join</a></dt>
                     <dd>
                     </dd>
@@ -259,13 +271,16 @@
                     <dt><a href="Client.html#event:message">message</a></dt>
                     <dd>
                     </dd>
+                    <dt><a href="Client.html#event:message_ack">message_ack</a></dt>
+                    <dd>
+                    </dd>
+                    <dt><a href="Client.html#event:message_ciphertext">message_ciphertext</a></dt>
+                    <dd>
+                    </dd>
                   </dl>
                 </div>
                 <div class="summary-column">
                   <dl class="dl-summary-callout">
-                    <dt><a href="Client.html#event:message_ack">message_ack</a></dt>
-                    <dd>
-                    </dd>
                     <dt><a href="Client.html#event:message_create">message_create</a></dt>
                     <dd>
                     </dd>
@@ -494,7 +509,7 @@
                               <p>&nbsp;</p>
                             </td>
                             <td>
-                              <p>Ffmpeg path to use when formating videos to webp while sending stickers</p>
+                              <p>Ffmpeg path to use when formatting videos to webp while sending stickers</p>
                             </td>
                           </tr>
                           <tr>
@@ -545,6 +560,8 @@
               <dd><a href="Client.html#event:message_create">Client#event:message_create</a></dd>
               <dd><a href="Client.html#event:message_revoke_me">Client#event:message_revoke_me</a></dd>
               <dd><a href="Client.html#event:message_revoke_everyone">Client#event:message_revoke_everyone</a></dd>
+              <dd><a href="Client.html#event:message_ciphertext">Client#event:message_ciphertext</a></dd>
+              <dd><a href="Client.html#event:message_edit">Client#event:message_edit</a></dd>
               <dd><a href="Client.html#event:media_uploaded">Client#event:media_uploaded</a></dd>
               <dd><a href="Client.html#event:group_join">Client#event:group_join</a></dd>
               <dd><a href="Client.html#event:group_leave">Client#event:group_leave</a></dd>
@@ -1770,6 +1787,142 @@
                 </dd>
               </dl>
               <div class="symbol-detail-labels"><span class="label label-async">async</span></div>
+              <h3 id="setAutoDownloadAudio"><span class="symbol-name">setAutoDownloadAudio</span><span class="signature"><span class="signature-params">(flag)</span></span></h3>
+              <p>Setting autoload download audio</p>
+              <section>
+                <h4>Parameter</h4>
+                <table class="jsdoc-details-table">
+                  <thead>
+                    <tr>
+                      <th>Name</th>
+                      <th>Type</th>
+                      <th>Optional</th>
+                      <th>Description</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>
+                        <p>flag</p>
+                      </td>
+                      <td>
+                        <p>boolean</p>
+                      </td>
+                      <td>
+                        <p>&nbsp;</p>
+                      </td>
+                      <td>
+                        <p>true/false</p>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </section>
+              <dl class="dl-compact">
+              </dl>
+              <div class="symbol-detail-labels"><span class="label label-async">async</span></div>
+              <h3 id="setAutoDownloadDocuments"><span class="symbol-name">setAutoDownloadDocuments</span><span class="signature"><span class="signature-params">(flag)</span></span></h3>
+              <p>Setting autoload download documents</p>
+              <section>
+                <h4>Parameter</h4>
+                <table class="jsdoc-details-table">
+                  <thead>
+                    <tr>
+                      <th>Name</th>
+                      <th>Type</th>
+                      <th>Optional</th>
+                      <th>Description</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>
+                        <p>flag</p>
+                      </td>
+                      <td>
+                        <p>boolean</p>
+                      </td>
+                      <td>
+                        <p>&nbsp;</p>
+                      </td>
+                      <td>
+                        <p>true/false</p>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </section>
+              <dl class="dl-compact">
+              </dl>
+              <div class="symbol-detail-labels"><span class="label label-async">async</span></div>
+              <h3 id="setAutoDownloadPhotos"><span class="symbol-name">setAutoDownloadPhotos</span><span class="signature"><span class="signature-params">(flag)</span></span></h3>
+              <p>Setting autoload download photos</p>
+              <section>
+                <h4>Parameter</h4>
+                <table class="jsdoc-details-table">
+                  <thead>
+                    <tr>
+                      <th>Name</th>
+                      <th>Type</th>
+                      <th>Optional</th>
+                      <th>Description</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>
+                        <p>flag</p>
+                      </td>
+                      <td>
+                        <p>boolean</p>
+                      </td>
+                      <td>
+                        <p>&nbsp;</p>
+                      </td>
+                      <td>
+                        <p>true/false</p>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </section>
+              <dl class="dl-compact">
+              </dl>
+              <div class="symbol-detail-labels"><span class="label label-async">async</span></div>
+              <h3 id="setAutoDownloadVideos"><span class="symbol-name">setAutoDownloadVideos</span><span class="signature"><span class="signature-params">(flag)</span></span></h3>
+              <p>Setting autoload download videos</p>
+              <section>
+                <h4>Parameter</h4>
+                <table class="jsdoc-details-table">
+                  <thead>
+                    <tr>
+                      <th>Name</th>
+                      <th>Type</th>
+                      <th>Optional</th>
+                      <th>Description</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>
+                        <p>flag</p>
+                      </td>
+                      <td>
+                        <p>boolean</p>
+                      </td>
+                      <td>
+                        <p>&nbsp;</p>
+                      </td>
+                      <td>
+                        <p>true/false</p>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </section>
+              <dl class="dl-compact">
+              </dl>
+              <div class="symbol-detail-labels"><span class="label label-async">async</span></div>
               <h3 id="setDisplayName"><span class="symbol-name">setDisplayName</span><span class="signature"><span class="signature-params">(displayName)</span>&nbsp;&rarr; <span class="signature-returns"> Promise containing Boolean</span></span></h3>
               <p>Sets the current user's display name.
                 This is the name shown to WhatsApp users that have not added you as a contact beside your number in groups and in your profile.</p>
@@ -2772,6 +2925,38 @@
               </section>
               <dl class="dl-compact">
               </dl>
+              <h3 id="event:message_ciphertext"><span class="symbol-name">message_ciphertext</span></h3>
+              <p>Emitted when messages are edited</p>
+              <section>
+                <h4>Parameter</h4>
+                <table class="jsdoc-details-table">
+                  <thead>
+                    <tr>
+                      <th>Name</th>
+                      <th>Type</th>
+                      <th>Optional</th>
+                      <th>Description</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>
+                        <p>message</p>
+                      </td>
+                      <td>
+                        <p><a href="Message.html">Message</a></p>
+                      </td>
+                      <td>
+                        <p>&nbsp;</p>
+                      </td>
+                      <td>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </section>
+              <dl class="dl-compact">
+              </dl>
               <h3 id="event:message_create"><span class="symbol-name">message_create</span></h3>
               <p>Emitted when a new message is created, which may include the current user's own messages.</p>
               <section>
@@ -3165,7 +3350,7 @@
   <footer id="jsdoc-footer" class="jsdoc-footer">
     <div id="jsdoc-footer-container">
       <p>
-        Generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc</a> 3.6.11 on October 21, 2023.
+        Generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc</a> 3.6.11 on April 24, 2024.
       </p>
     </div>
   </footer>
