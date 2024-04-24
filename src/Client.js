@@ -113,7 +113,9 @@ class Client extends EventEmitter {
             // navigator.webdriver fix
             browserArgs.push('--disable-blink-features=AutomationControlled');
 
+            console.log("LANZANDO INSTANCIA DE PUPPETEER")
             browser = await puppeteer.launch({...puppeteerOpts, args: browserArgs});
+            console.log("CREANDO UNA NUEVA PÁGINA")
             page = (await browser.pages())[0];
         }
         console.log("AUTENTICANDO CON EL PROXY")
