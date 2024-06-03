@@ -3,7 +3,7 @@
 /* Require Optional Dependencies */
 try {
     var fs = require('fs-extra');
-    var AdmZip = require('adm-zip');
+    var unzipper = require('unzipper');
     var archiver = require('archiver');
 } catch {
     fs = undefined;
